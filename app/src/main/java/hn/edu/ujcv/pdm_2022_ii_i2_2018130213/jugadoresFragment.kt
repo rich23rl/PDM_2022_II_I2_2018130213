@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import org.junit.Test
 
 
 class jugadoresFragment : Fragment() {
@@ -76,5 +77,14 @@ class jugadoresFragment : Fragment() {
                 itemView.setOnClickListener(this)
             }
         }
+    }
+    @Test
+    fun emptyDatabaseReturnsServerValue() {
+        val db = Mockito.mock(ForecastDataSource::class.java)
+        val server = Mockito.mock(ForecastDataSource::class.java)
+        `when`(server.requestForecastByZipCode(any(Long::class.java), any(Long::class.java)))
+            .then { ForecastList(0, "city", "country", listOf()) }
+        val provider = ForecastProvider(listOf(db, server))
+        assertNotNull(provider.requestByZipCode(0, 0))
     }
 }
